@@ -56,6 +56,80 @@ In conclusion, the choice between implementing JWT authentication manually and u
 
 # CLIENT-SIDE
 
+## App.js (React Component)
+
+### State Management
+
+- `user`: Holds form data for username and password.
+- `loader`: Indicates if the app is in a loading state.
+
+### Redux Hooks
+
+- `useDispatch`: Used to dispatch Redux actions.
+- `useSelector`: Used to access state from the Redux store.
+
+### Redux State
+
+- `MESSAGE`: Retrieves message state from Redux store for display.
+- `isAuthenticated`: Retrieves user's authentication status from Redux store.
+
+### Form Handling
+
+- `handleData`: Updates `user` state with form inputs.
+- `handleSubmit`: Dispatches `userLogin` action with user data and handles errors with `addMessage`.
+
+### User Authentication
+
+- `handleLogout`: Dispatches `userLogout` action and manages `loader` state.
+- `useEffect`: On mount, dispatches `userStatus` to check authentication and sets `loader`.
+
+### Rendering Logic
+
+- Shows loading indicator if `loader` is `true`.
+- Renders homepage if user is authenticated.
+- Otherwise, shows login form and any Redux store messages.
+
+## User Reducer (Redux Toolkit)
+
+### Asynchronous Thunks
+
+- `userLogin`: POST request for user login.
+- `userStatus`: GET request to check user's authentication status.
+- `userLogout`: DELETE request for user logout.
+
+### Rejecting Redundant Requests
+
+- `userLogin` and `userStatus` reject if already authenticated to avoid unnecessary requests.
+
+### Error Handling
+
+- `userLogin` and `userStatus` catch server errors and return them with `rejectWithValue`.
+
+### Extra Reducers
+
+- `handleUserFulfilled`: Marks user as authenticated and sets username on success.
+- `handleUserRejected`: Sets error message on failed login or status check.
+- `userLogout.fulfilled`: Updates state to reflect user is not authenticated.
+- `userLogout.rejected`: Sets error message on failed logout.
+
+### Initial State
+
+- User's initial state: not authenticated, `null` username, no error.
+
+### Exporting Reducer
+
+- Exports the reducer function from `createSlice` for Redux store use.
+
+## General Flow
+
+- On load, app checks user's authentication status.
+- If not authenticated, shows login form.
+- Upon login, contacts server to authenticate user.
+- If authenticated, displays homepage with logout option.
+- On logout, server ends session, client clears auth state.
+
+This documentation provides a guide for managing authentication in a React/Redux application, with patterns for asynchronous server interaction and UI state management.
+
 ## Redux Notes
 
 - **Good practice**
